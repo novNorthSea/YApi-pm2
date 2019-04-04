@@ -1,0 +1,37 @@
+version: "3.3"
+
+services:
+  db:
+    container_name: yapi-mongo
+    image: mongo
+    networks:
+      - yapi_net
+    ports:
+      - "27017:27017"
+    volumes:
+      - type: volume
+        source: mongo_db
+        target: /data/db
+      - type: volume
+        source: mongo_configdb
+        target: /data/configdb
+    restart: always
+
+  yapipm2:
+    depends_on:
+      - db
+    container_name: yapipm2
+    image: yapipm2
+    networks:
+      - yapi_net
+    ports:
+      - "3001:3000"
+    restart: always
+
+networks:
+  yapi_net:
+    driver: bridge
+
+volumes:
+  mongo_db: {}
+  mongo_configdb: {}
